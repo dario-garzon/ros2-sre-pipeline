@@ -8,7 +8,7 @@ From a Git commit to a real robot, with every step tested, observed and reversib
 
 <br>
 
-<img src="https://skillicons.dev/icons?i=ros,docker,githubactions,aws,raspberrypi,prometheus,grafana&theme=dark" alt="Tech stack" />
+<img src="https://skillicons.dev/icons?i=ros,docker,githubactions,raspberrypi,prometheus,grafana&theme=dark" alt="Tech stack" />
 
 <br><br>
 
@@ -58,7 +58,7 @@ A CI/CD pipeline that takes a ROS 2 change from a Git commit to a real robot (Ra
 flowchart LR
     A(["Git push"]) --> B["Build<br/>& Test"]
     B --> C["Gazebo<br/>simulation"]
-    C --> D["ARM64 image<br/>→ ECR"]
+    C --> D["ARM64 image<br/>→ GHCR"]
     D --> E["Deploy<br/>to Pi"]
     E --> F["Health<br/>checks"]
     F --> G["Prometheus<br/>+ Grafana"]
@@ -123,8 +123,8 @@ To get meaningful data, I inject faults on purpose (killed nodes, bad configs, b
 - [x] ROS 2 Jazzy workspace + smoke-test node
 - [x] Build and tests in GitHub Actions
 - [x] Dockerfile that builds and runs the node, built by a second CI job
+- [x] ARM64 image build and push to GHCR
 - [ ] Gazebo simulation scenarios as a quality gate
-- [ ] ARM64 image build and push to AWS ECR
 - [ ] Automated deployment to the Raspberry Pi
 - [ ] Runtime health checks and automatic rollback
 - [ ] Prometheus and Grafana dashboards
