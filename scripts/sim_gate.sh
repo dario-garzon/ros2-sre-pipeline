@@ -17,4 +17,4 @@ gz topic -t /model/vehicle_blue/cmd_vel -m gz.msgs.Twist -p "linear: {x: 0.5}"
 sleep 5
 POS_AFTER=$(gz topic -e -t /model/vehicle_blue/odometry -n 1 | grep 'x:' | head -n 1 | awk '{print $2}')
 
-awk -v a="$POS_BEFORE" -v b="$POS_AFTER" 'BEGIN { exit (b - a > 100) ? 0 : 1 }'
+awk -v a="$POS_BEFORE" -v b="$POS_AFTER" 'BEGIN { exit (b - a > 1) ? 0 : 1 }'
