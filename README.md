@@ -15,7 +15,7 @@ From a Git commit to a real robot, with every step tested, observed and reversib
 <img src="https://img.shields.io/badge/ROS_2-Jazzy-22314E?style=flat-square" alt="ROS 2 Jazzy">
 <img src="https://img.shields.io/badge/target-ARM64-2496ED?style=flat-square" alt="ARM64">
 <img src="https://img.shields.io/badge/status-work_in_progress-F46800?style=flat-square" alt="Status">
-<a href="https://github.com/DonMyuser/ros2-sre-pipeline/actions/workflows/ci.yml"><img src="https://github.com/DonMyuser/ros2-sre-pipeline/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+<a href="https://github.com/dario-garzon/ros2-sre-pipeline/actions/workflows/ci.yml"><img src="https://github.com/dario-garzon/ros2-sre-pipeline/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 <img src="https://img.shields.io/badge/license-MIT-2ea44f?style=flat-square" alt="License">
 
 <br><br>
@@ -124,7 +124,7 @@ To get meaningful data, I inject faults on purpose (killed nodes, bad configs, b
 - [x] Build and tests in GitHub Actions
 - [x] Dockerfile that builds and runs the node, built by a second CI job
 - [x] ARM64 image build and push to GHCR
-- [ ] Gazebo simulation scenarios as a quality gate
+- [x] Gazebo simulation scenarios as a quality gate
 - [ ] Automated deployment to the Raspberry Pi
 - [ ] Runtime health checks and automatic rollback
 - [ ] Prometheus and Grafana dashboards
@@ -151,8 +151,9 @@ The smoke-test node logs a message every 3 seconds. Stop it with `Ctrl+C`.
 
 ```text
 ros2-sre-pipeline/
-├── .github/workflows/   # CI pipeline (build + test)
-└── src/                 # ROS 2 packages (hello_world_node)
+├── .github/workflows/   # CI pipeline (build, test, simulate, push image)
+├── scripts/             # Helper scripts (sim_gate.sh: Gazebo movement check)
+├── src/                 # ROS 2 packages (hello_world_node)
 ├── Dockerfile           # Image that builds and runs the node
 └── .dockerignore        # Keeps build artifacts out of the image
 ```
