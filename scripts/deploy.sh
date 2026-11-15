@@ -2,8 +2,21 @@
 set -e
 
 STATE_FILE="$HOME/.ros2-sre-last-good"
+FAILED_FILE="$HOME/.ros2-sre-last-failed"
 
 IMAGE=$(curl -fsSL https://raw.githubusercontent.com/dario-garzon/ros2-sre-pipeline/deploy/desired-image)
+
+RUNNING_IMAGE=$(docker inspect -f '{{.Config.Image}}' ros2-sre-node 2>/dev/null || echo "")
+
+if [ -f "$FAILED_FILE" ] && [ "$(cat "$FAILED_FILE")" = "$IMAGE" ]; then
+  echo "Skipping $IMAGE: it already failed the health check"
+  exit 0
+fi
+
+if [ "$RUNNING_IMAGE" = "$IMAGE" ]; then
+  echo "Already running $IMAGE, nothing to do"
+  exit 0
+fi
 
 docker pull --platform linux/arm64 "$IMAGE"
 docker rm -f ros2-sre-node 2>/dev/null || true
@@ -22,5 +35,6 @@ else
   else
     echo "No previous good version to roll back to"
   fi
+  echo "$IMAGE" > "$FAILED_FILE"
   exit 1
 fi
