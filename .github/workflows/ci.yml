@@ -23,9 +23,19 @@ jobs:
           source /opt/ros/jazzy/setup.bash
           colcon test
           colcon test-result --verbose
+  simulation:
+    runs-on: ubuntu-24.04
+    container: ros:jazzy
+    needs: build-and-test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Gazebo
+        run: apt-get update && apt-get install -y ros-jazzy-ros-gz
+      - name: Run simulation gate
+        run: ./scripts/sim_gate.sh
   docker-build:
     runs-on: ubuntu-24.04
-    needs: build-and-test
+    needs: simulation
     permissions:
       contents: read
       packages: write
