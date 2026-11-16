@@ -3,6 +3,7 @@ set -e
 
 STATE_FILE="$HOME/.ros2-sre-last-good"
 FAILED_FILE="$HOME/.ros2-sre-last-failed"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 IMAGE=$(curl -fsSL https://raw.githubusercontent.com/dario-garzon/ros2-sre-pipeline/deploy/desired-image)
 
@@ -22,7 +23,7 @@ docker pull --platform linux/arm64 "$IMAGE"
 docker rm -f ros2-sre-node 2>/dev/null || true
 docker run -d --name ros2-sre-node --platform linux/arm64 "$IMAGE"
 
-if ./scripts/health_check.sh; then
+if "$SCRIPT_DIR/health_check.sh"; then
   echo "$IMAGE" > "$STATE_FILE"
   echo "Deploy OK"
 else
