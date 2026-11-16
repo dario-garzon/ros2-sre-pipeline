@@ -53,3 +53,21 @@ jobs:
       - name: Push image
         if: github.event_name == 'push'
         run: docker buildx build --platform linux/arm64 -t ghcr.io/dario-garzon/ros2-sre-pipeline:${{ github.sha }} --push .
+  publish-desired-image:
+    runs-on: ubuntu-24.04
+    needs: docker-build
+    if: github.event_name == 'push'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: deploy
+      - name: Point deploy branch at the new image
+        run: |
+          echo "ghcr.io/dario-garzon/ros2-sre-pipeline:${{ github.sha }}" > desired-image
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add desired-image
+          git commit -m "deploy: pin image to ${{ github.sha }}"
+          git push
