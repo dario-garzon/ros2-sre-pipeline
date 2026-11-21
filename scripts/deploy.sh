@@ -14,7 +14,9 @@ if [ -f "$FAILED_FILE" ] && [ "$(cat "$FAILED_FILE")" = "$IMAGE" ]; then
   exit 0
 fi
 
-if [ "$RUNNING_IMAGE" = "$IMAGE" ]; then
+IS_UP=$(docker inspect -f '{{.State.Running}}' ros2-sre-node 2>/dev/null || echo false)
+
+if [ "$RUNNING_IMAGE" = "$IMAGE" ] && [ "$IS_UP" = "true" ]; then
   echo "Already running $IMAGE, nothing to do"
   exit 0
 fi
@@ -28,14 +30,20 @@ if "$SCRIPT_DIR/health_check.sh"; then
   echo "Deploy OK"
 else
   echo "Health check failed"
+  echo "$IMAGE" > "$FAILED_FILE"
   if [ -f "$STATE_FILE" ]; then
     LAST_GOOD=$(cat "$STATE_FILE")
     docker rm -f ros2-sre-node
     docker run -d --name ros2-sre-node --platform linux/arm64 "$LAST_GOOD"
-    echo "Rolled back"
+    if "$SCRIPT_DIR/health_check.sh"; then
+      echo "Rolled back and recovered"
+      exit 1
+    else
+      echo "Rollback FAILED: node is down"
+      exit 2
+    fi
   else
-    echo "No previous good version to roll back to"
+    echo "No previous good version to roll back to: node is down"
+    exit 2
   fi
-  echo "$IMAGE" > "$FAILED_FILE"
-  exit 1
 fi
