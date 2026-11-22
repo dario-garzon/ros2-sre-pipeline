@@ -5,7 +5,7 @@ STATE_FILE="$HOME/.ros2-sre-last-good"
 FAILED_FILE="$HOME/.ros2-sre-last-failed"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-IMAGE=$(curl -fsSL https://raw.githubusercontent.com/dario-garzon/ros2-sre-pipeline/deploy/desired-image)
+IMAGE="${1:-$(curl -fsSL https://raw.githubusercontent.com/dario-garzon/ros2-sre-pipeline/deploy/desired-image)}"
 
 RUNNING_IMAGE=$(docker inspect -f '{{.Config.Image}}' ros2-sre-node 2>/dev/null || echo "")
 
