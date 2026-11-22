@@ -1,0 +1,10 @@
+[Unit]
+Description=Check for a new desired image periodically
+
+[Timer]
+OnBootSec=1min
+OnUnitInactiveSec=1min
+Unit=ros2-sre-deploy.service
+
+[Install]
+WantedBy=timers.target

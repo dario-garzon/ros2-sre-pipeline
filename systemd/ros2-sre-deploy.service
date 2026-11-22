@@ -1,0 +1,7 @@
+[Unit]
+Description=Deploy the pinned ROS 2 image
+
+[Service]
+Type=oneshot
+User=sysop
+ExecStart=/home/sysop/ros2-sre-pipeline/scripts/deploy.sh
